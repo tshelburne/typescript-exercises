@@ -64,12 +64,7 @@ const persons: Person[] = [
 ];
 
 function logPerson(person: Person) {
-    let additionalInformation: string;
-    if (person.role) {
-        additionalInformation = person.role;
-    } else {
-        additionalInformation = person.occupation;
-    }
+    const additionalInformation = (person as Admin).role || (person as User).occupation
     console.log(` - ${chalk.green(person.name)}, ${person.age}, ${additionalInformation}`);
 }
 

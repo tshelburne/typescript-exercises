@@ -32,14 +32,12 @@ Run:
 */
 
 interface User {
-    type: 'user';
     name: string;
     age: number;
     occupation: string;
 }
 
 interface Admin {
-    type: 'admin';
     name: string;
     age: number;
     role: string;
@@ -48,41 +46,36 @@ interface Admin {
 type Person = User | Admin;
 
 const persons: Person[] = [
-    { type: 'user', name: 'Max Mustermann', age: 25, occupation: 'Chimney sweep' },
+    { name: 'Max Mustermann', age: 25, occupation: 'Chimney sweep' },
     {
-        type: 'admin',
         name: 'Jane Doe',
         age: 32,
         role: 'Administrator'
     },
     {
-        type: 'user',
         name: 'Kate Müller',
         age: 23,
         occupation: 'Astronaut'
     },
     {
-        type: 'admin',
         name: 'Bruce Willis',
         age: 64,
         role: 'World saver'
     },
     {
-        type: 'user',
         name: 'Wilson',
         age: 23,
         occupation: 'Ball'
     },
     {
-        type: 'admin',
         name: 'Agent Smith',
         age: 23,
         role: 'Administrator'
     }
 ];
 
-const isAdmin = (person: Person): person is Admin => person.type === 'admin';
-const isUser = (person: Person): person is User => person.type === 'user';
+const isAdmin = (person: Person): person is Admin => !!(person as Admin).role;
+const isUser = (person: Person): person is User => !!(person as User).occupation;
 
 function logPerson(person: Person) {
     let additionalInformation: string = '';
@@ -95,7 +88,7 @@ function logPerson(person: Person) {
     console.log(` - ${chalk.green(person.name)}, ${person.age}, ${additionalInformation}`);
 }
 
-function filterUsers(persons: Person[], criteria: User): User[] {
+function filterUsers(persons: Person[], criteria: Partial<User>): User[] {
     return persons.filter(isUser).filter((user) => {
         let criteriaKeys = Object.keys(criteria) as (keyof User)[];
         return criteriaKeys.every((fieldName) => {
